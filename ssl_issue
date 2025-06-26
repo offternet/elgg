@@ -1,0 +1,28 @@
+This document applies only to Elgg 6 that is hosted on an Linux Apache Webserver. Depending on how your .htaccess file is configure (different among host companies) you may experience SSL failure and issues with https:// not working in a web browser. The below  code has been tested to work on Godaddy Linux Hosting. I also had issues that if a user used the www. before domain name, it wouuld not force https: so, there is code for the .htaccess file to fix this as well.
+
+1.  Issue:  https:// will not work at all in web browser:
+    (please verify your SSL Certificate for affected domain shows to be install and GREEN in cPanel).
+
+    A. Insert below code below line in .htaccess file as directed. Insert correct domain name in code.
+
+    # ######## Add this code to force addon or sub domain to use https://
+
+    # (Below line will be found in the .htaccess file so place the necessary code below this line.)
+	  # If you must add RewriteRules to change hostname, add them directly below (above all the others)
+    
+      RewriteCond %{HTTP_HOST} ^(www\.)?yourdomainname.com$ [NC]
+      RewriteCond %{HTTPS} off
+      RewriteRule ^ https://yourdomainname.com%{REQUEST_URI} [NC,L,R]
+
+2. Issue: when www. is used in domain name, https:// does not work in web browser:
+    A. Insert below code in your ./htaccess file.
+
+    # (Below line will be found in the .htaccess file so place the necessary code below this line.)
+	  # If you must add RewriteRules to change hostname, add them directly below (above all the others)
+
+    # ########## Add this code to stip www to allow https:// to work:
+ 
+     RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+     RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
+
+    # ############################################
